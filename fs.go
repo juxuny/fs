@@ -10,7 +10,7 @@ import (
 )
 
 type FileSystemHelperInterface interface {
-	Execute() (err error)
+	Execute(keepNumberOfFile int) (err error)
 }
 
 type FileFilter func(fileName string, createTime time.Time, modifiedTime time.Time) bool
@@ -27,10 +27,14 @@ func CreateFileCleaner(dir string, filter FileFilter) FileSystemHelperInterface 
 	}
 }
 
-func (t *fileCleaner) Execute() (err error) {
+func (t *fileCleaner) Execute(keepNumberOfFile int) (err error) {
 	list, err := ioutil.ReadDir(t.Directory)
 	if err != nil {
 		return errors.Wrapf(err, "read directory failed")
+	}
+	remainCount := len(list)
+	if remainCount <= keepNumberOfFile {
+		return nil
 	}
 	for _, item := range list {
 		if item.IsDir() {
@@ -44,6 +48,10 @@ func (t *fileCleaner) Execute() (err error) {
 			if err != nil {
 				return err
 			}
+			remainCount -= 1
+		}
+		if remainCount <= keepNumberOfFile {
+			return nil
 		}
 	}
 	return nil

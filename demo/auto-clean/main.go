@@ -15,7 +15,7 @@ func main() {
 		}
 		return false
 	})
-	err := helper.Execute()
+	err := helper.Execute(1)
 	if err != nil {
 		panic(err)
 	}
