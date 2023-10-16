@@ -1,12 +1,13 @@
 package fs
 
 import (
-	"github.com/pkg/errors"
 	"io/ioutil"
 	"os"
 	"path"
 	"syscall"
 	"time"
+
+	"github.com/pkg/errors"
 )
 
 func (t *fileCleaner) Execute(keepNumberOfFile int, removeFilter FileFilter) (err error) {
